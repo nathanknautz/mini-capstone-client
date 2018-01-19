@@ -2,26 +2,82 @@ require 'unirest'
 require 'tty-table'
 require 'paint'
 
-response = Unirest.get("http://localhost:3000/all_products_url")
+system "clear"
+puts "Hello, what would you like to do?"
+puts "     [1] See all my products?"
+puts "     [2] See one of my products?"
+puts "     [3] Create a new product?"
+puts "     [4] Update a product?"
+puts "     [5] Delete a product?"
 
-products = response.body
+input_option = gets.chomp
 
+if input_option == "1"
+  response = Unirest.get("http://localhost:3000/products/")
+  products = response.body
+  system "clear"
+  puts "How would you like to see the products?"
+  puts "[1] JSON or [2] Table?"
+  input_option = gets.chomp
+  
+  if input_option == "1"
+    puts JSON.pretty_generate(products)
+  elsif input_option == "2"
+    display_products = []
+    products.each do |product|
+      display_products << [product["name"],product["price"],product["description"]]                   
+    end
+    table = TTY::Table.new ['Name','Price','Description'], display_products
+    puts table.render(:unicode)
+  end 
 
+elsif input_option == "2"
+  system "clear"
+  print "Enter product ID: "
+  input_id = gets.chomp
+  response = Unirest.get("http://localhost:3000/products/#{input_id}")
+  product = response.body 
+  puts JSON.pretty_generate(product)
 
-display_products = []
-products.each do |product|
-  display_products << [product["name"],product["price"],product["description"]]                   
-end
+elsif input_option == "3"
+  product_data = {}
+  system "clear"
+  print "Name: "
+  product_data[:name] = gets.chomp
+  print "Price: "
+  product_data[:price] = gets.chomp
+  print "Image URL: "
+  product_data[:image_url] = gets.chomp
+  print "Description: "
+  product_data[:description] = gets.chomp
+  response = Unirest.post("http://localhost:3000/products",
+                          parameters: product_data)
+elsif input_option == "4"
+  system "clear"
+  print "Enter product ID: "
+  input_id = gets.chomp
+  response = Unirest.get("http://localhost:3000/products/#{input_id}")
+  product = response.body 
+  product_data = {}
+  print "Name  (#{product["name"]}): "
+  product_data[:name] = gets.chomp
+  print "Price  (#{product["price"]}): "
+  product_data[:price] = gets.chomp
+  print "Image URL   (#{product["image_url"]}): "
+  product_data[:image_url] = gets.chomp
+  print "Description:    (#{product["description"]}): "
+  product_data[:description] = gets.chomp
+  product_data.delete_if {|key,value| value.empty?}
 
-table = TTY::Table.new ['Name','Price','Description'], display_products
+  response = Unirest.patch("http://localhost:3000/products/#{input_id}",
+                          parameters: product_data)
 
+elsif input_option == "5"
+  system "clear"
+  print "Enter product ID: "
+  input_id = gets.chomp
+  response = Unirest.delete("http://localhost:3000/products/#{input_id}")
+  data = response.body
+  puts data["message"]
 
-puts Paint['These are my products', 'Snow']
-
-puts "Would you like to see the [1] JSON or the [2] Table version?"
-input = gets.chomp.to_i
-if input == 1
-  puts JSON.pretty_generate(products)
-else
-  puts table.render(:unicode)
-end
+end 
