@@ -10,6 +10,7 @@ puts "     [3] Create a new product?"
 puts "     [4] Update a product?"
 puts "     [5] Delete a product?"
 
+
 input_option = gets.chomp
 
 if input_option == "1"
@@ -79,5 +80,5 @@ elsif input_option == "5"
   response = Unirest.delete("http://localhost:3000/products/#{input_id}")
   data = response.body
   puts data["message"]
-
 end 
+
