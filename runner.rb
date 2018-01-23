@@ -51,6 +51,8 @@ elsif input_option == "3"
   product_data[:image_url] = gets.chomp
   print "Description: "
   product_data[:description] = gets.chomp
+  print "In Stock? (true/false): "
+  product_data[:in_stock] = gets.chomp
   response = Unirest.post("http://localhost:3000/products",
                           parameters: product_data)
 elsif input_option == "4"
@@ -68,6 +70,8 @@ elsif input_option == "4"
   product_data[:image_url] = gets.chomp
   print "Description:    (#{product["description"]}): "
   product_data[:description] = gets.chomp
+  print "In Stock?:    (#{product["in_stock"]}): "
+  product_data[:in_stock] = gets.chomp
   product_data.delete_if {|key,value| value.empty?}
 
   response = Unirest.patch("http://localhost:3000/products/#{input_id}",
