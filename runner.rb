@@ -5,6 +5,7 @@ require 'paint'
 system "clear"
 puts "Hello, what would you like to do?"
 puts "     [1] See all my products?"
+puts "          [1.1] Search my products?"
 puts "     [2] See one of my products?"
 puts "     [3] Create a new product?"
 puts "     [4] Update a product?"
@@ -31,7 +32,13 @@ if input_option == "1"
     table = TTY::Table.new ['Name','Price','Description'], display_products
     puts table.render(:unicode)
   end 
-
+elsif input_option = "1.1"
+  system "clear"
+  print "Enter search term: "
+  search_term = gets.chomp
+  response = Unirest.get("http://localhost:3000/products?search=#{search_term}")
+  products = response.body
+  puts JSON.pretty_generate(products)
 elsif input_option == "2"
   system "clear"
   print "Enter product ID: "
