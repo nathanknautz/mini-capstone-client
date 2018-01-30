@@ -3,9 +3,12 @@ module ProductsViews
     puts
     puts "#{product.name} - ID: #{product.id}"
     puts 
+    puts "Images"
+    puts product.image_urls
+    puts 
     puts product.description
     puts
-    puts "Supplier: #{product.supplier_name}"
+    puts "Supplier: #{product.supplier_name} - Id: #{product.supplier_id}"
     puts
     puts product.price 
     puts product.tax
@@ -20,7 +23,7 @@ module ProductsViews
       puts 
       puts product.description
       puts
-      puts "Supplier: #{product.supplier_name}"
+      puts "Supplier: #{product.supplier_name} - Id: #{product.supplier_id}"
       puts
       puts product.price 
       puts product.tax
@@ -45,8 +48,8 @@ module ProductsViews
     product_data[:image_url] = gets.chomp
     print "Description: "
     product_data[:description] = gets.chomp
-    print "In Stock? (true/false): "
-    product_data[:in_stock] = gets.chomp
+    print "Supplier Id: "
+    product_data[:supplier_id] = gets.chomp
     product_data
   end
 
@@ -60,8 +63,8 @@ module ProductsViews
     product_data[:image_url] = gets.chomp
     print "Description:    (#{product.description}): "
     product_data[:description] = gets.chomp
-    print "In Stock?:    (#{product.in_stock}): "
-    product_data[:in_stock] = gets.chomp
+    print "Supplier Id:   (#{product.supplier_id}): "
+    product_data[:supplier_id] = gets.chomp
     product_data.delete_if {|key,value| value.empty?}
     product_data
   end
