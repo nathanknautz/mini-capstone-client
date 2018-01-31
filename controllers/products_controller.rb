@@ -6,6 +6,19 @@ module ProductsController
     product_hash = get_request("/products/#{input_id}")
     product = Product.new(product_hash)
     products_show_view(product)
+
+    puts "press enter to continue or type 'O' to order"
+    user_choice = gets.chomp
+    if user_choice == 'O'
+      print "Enter a quantity to order:"
+      input_quantity = gets.chomp
+      client_params = { product_id: input_id,
+                       quantity: input_quantity
+                       
+                       }
+      json_data = post_request("orders", client_params)
+      puts JSON.pretty_generate(json_data)
+    end
   end
 
   def products_index_action
