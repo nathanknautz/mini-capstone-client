@@ -44,8 +44,6 @@ module ProductsViews
     product_data[:name] = gets.chomp
     print "Price: "
     product_data[:price] = gets.chomp
-    print "Image URL: "
-    product_data[:image_url] = gets.chomp
     print "Description: "
     product_data[:description] = gets.chomp
     print "Supplier Id: "
@@ -59,8 +57,6 @@ module ProductsViews
     product_data[:name] = gets.chomp
     print "Price  (#{product.price}): "
     product_data[:price] = gets.chomp
-    print "Image URL   (#{product.image_url}): "
-    product_data[:image_url] = gets.chomp
     print "Description:    (#{product.description}): "
     product_data[:description] = gets.chomp
     print "Supplier Id:   (#{product.supplier_id}): "

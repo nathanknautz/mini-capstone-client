@@ -16,8 +16,13 @@ module ProductsController
                        quantity: input_quantity
                        
                        }
-      json_data = post_request("orders", client_params)
-      puts JSON.pretty_generate(json_data)
+      #json_data = post_request("orders", client_params)
+      response = Unirest.post("http://localhost:3000/orders", parameters: client_params)
+      if response.code == 200
+        puts JSON.pretty_generate(response.body)
+      elsif response.code == 401
+        puts "Nah bro, you gotta be authorized."
+      end
     end
   end
 
@@ -31,13 +36,16 @@ module ProductsController
   def products_create_action
     system "clear"
     product_data = products_new_form
-    json_data = post_request("/products",product_data)
-    if !json_data["errors"]
-      product = Product.new(json_data)
+    #json_data = post_request("/products",product_data)
+    response = Unirest.post("http://localhost:3000/products",parameters: product_data)
+    if response.code == 200
+      product = Product.new(response.body)
       products_show_view(product)
-    else
-      errors = json_data["errors"]
+    elsif response.code == 422
+      errors = response.body["errors"]
       products_errors_view(errors)
+    elsif response.code == 401
+      puts JSON.pretty_generate(response.body)
     end
   end
 
@@ -47,13 +55,16 @@ module ProductsController
     product_hash = get_request("products/#{input_id}")
     product = Product.new(product_hash)
     product_data = products_update_form(product)
-    json_data = patch_request("/products/#{input_id}",product_data)
-    if !json_data["errors"]
-      product = Product.new(json_data)
+    #json_data = patch_request("/products/#{input_id}",product_data)
+    response = Unirest.patch("http://localhost:3000/products/#{input_id}",parameters: product_data)
+    if response.code == 200
+      product = Product.new(response.body)
       products_show_view(product)
-    else
-      errors = json_data["errors"]
+    elsif response.code == 422
+      errors = response.body["errors"]
       products_errors_view(errors)
+    elsif response.code == 401
+      puts JSON.pretty_generate(response.body)
     end
     
   end
@@ -61,8 +72,16 @@ module ProductsController
   def products_destroy_action
     system "clear"
     input_id = products_id_form
-    json_data = delete_request("/products/#{input_id}")
-    puts json_data["message"]
+    #json_data = delete_request("/products/#{input_id}")
+    response = Unirest.delete("http://localhost:3000/products/#{input_id}")
+    if response.code == 200
+      puts response.body["message"]
+    elsif response.code == 422
+      errors = response.body["errors"]
+      products_errors_view(errors)
+    elsif response.code == 401
+      puts JSON.pretty_generate(response.body)
+    end
   end
 
   def products_search_action

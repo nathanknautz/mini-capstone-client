@@ -25,6 +25,7 @@ class Frontend
       puts "     [4] Update a product?"
       puts "     [5] Delete a product?"
       puts "     [6] Add a new user?"
+      puts "     [7] View all orders?"
       puts "     [login] Login and create a JSON web token"
       puts "     [logout] Logout and clear JSON web token"
       puts "     [q] Quit the application."
@@ -51,6 +52,14 @@ class Frontend
         products_destroy_action
       elsif input_option == '6'
         users_create_action
+      elsif input_option == '7'
+        #order_hashs = get_request("/orders")
+        response = Unirest.get("http://localhost:3000/orders")
+        if response.code == 200
+          puts JSON.pretty_generate(response.body)
+        elsif response.code == 401
+          puts "Nah, you're not authorized..."
+        end
       elsif input_option == 'login'
         puts 
         print "Enter email: "
