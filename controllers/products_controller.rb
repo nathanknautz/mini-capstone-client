@@ -17,7 +17,7 @@ module ProductsController
                        
                        }
       #json_data = post_request("orders", client_params)
-      response = Unirest.post("http://localhost:3000/orders", parameters: client_params)
+      response = Unirest.post("http://localhost:3000/carted_products", parameters: client_params)
       if response.code == 200
         puts JSON.pretty_generate(response.body)
       elsif response.code == 401

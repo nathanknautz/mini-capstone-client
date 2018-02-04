@@ -27,7 +27,8 @@ class Frontend
       puts "     [5] Delete a product?"
       puts "     [6] Add a new user?"
       puts "     [7] View all orders?"
-      puts "     [8] Add an item to the cart"
+      puts "     [8] View the shopping cart"
+      puts "     [9] Checkout cart"
       puts "     [login] Login and create a JSON web token"
       puts "     [logout] Logout and clear JSON web token"
       puts "     [q] Quit the application."
@@ -80,13 +81,17 @@ class Frontend
           puts "Nah, you're not authorized..."
         end
       elsif input_option == '8'
-        puts
-        client_params = {}
-        print "Enter product id to add: "
-        client_params[:product_id] = gets.chomp
-        print "Enter quantity to order: "
-        client_params[:quantity] = gets.chomp
-        #ADD POST REQUEST
+        response = Unirest.get("http://localhost:3000/carted_products")
+        carted_products = response.body
+
+        carted_products.each do |carted_product|
+          puts "  * #{carted_product["product"]["name"]}"
+        end
+
+      elsif input_option == '9'
+        response = Unirest.post("http://localhost:3000/orders")
+        puts JSON.pretty_generate(response.body)
+
       elsif input_option == 'login'
         puts 
         print "Enter email: "
