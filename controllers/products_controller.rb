@@ -7,7 +7,8 @@ module ProductsController
     product = Product.new(product_hash)
     products_show_view(product)
 
-    puts "press enter to continue or type 'O' to order"
+    puts "Press enter to continue,"
+    puts "Or type 'O' to order "
     user_choice = gets.chomp
     if user_choice == 'O'
       print "Enter a quantity to order:"

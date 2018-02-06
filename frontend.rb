@@ -83,11 +83,20 @@ class Frontend
       elsif input_option == '8'
         response = Unirest.get("http://localhost:3000/carted_products")
         carted_products = response.body
-
         carted_products.each do |carted_product|
-          puts "  * #{carted_product["product"]["name"]}"
+          puts "  *#{carted_product["id"]} #{carted_product["product"]["name"]}"
         end
-
+        print "Press enter to continue or R to remove a product from cart: "
+        input = gets.chomp
+        if input == 'R'
+          carted_products.each do |carted_product|
+            puts "#{carted_product["id"]} #{carted_product["product"]["name"]}"
+          end
+          print "Enter the carted product id to remove: "
+          remove_id = gets.chomp.to_i
+          response = Unirest.delete("http://localhost:3000/carted_products/#{remove_id}")
+          puts JSON.pretty_generate(response.body)
+        end
       elsif input_option == '9'
         response = Unirest.post("http://localhost:3000/orders")
         puts JSON.pretty_generate(response.body)
